@@ -19,6 +19,7 @@ module.exports =
       @normCheckerByEditor.set(editor, normChecker)
 
       editor.onDidStopChanging =>
+        return unless activeEditor()
         [..., fileName] = activeEditor().getPath().split "/"
         if atom.config.get('epitech-norm-checker.autoCheckNorm') and fileName.match /^.*\.[ch]$/
           getNorm(activeEditor())?.check()
