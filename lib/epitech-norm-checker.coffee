@@ -1,3 +1,5 @@
+WarnView = require('./warn-view')
+
 module.exports =
 class EpitechNormChecker
   enabled: true
@@ -10,14 +12,18 @@ class EpitechNormChecker
   lineNum: 0
 
   markers: []
+  warns: []
 
-  constructor: (@editor) ->
+  warnView: null
+
+  constructor: (@editor, @warnView) ->
 
   warn: (msg, row, col, length) ->
 #    console.log "Norm error line " + row + ": " + msg
     marker = @editor.markBufferRange([[row, col], [row, col + length]], invalidate: 'inside')
     @editor.decorateMarker(marker, {type: 'highlight', class: 'norm-error'})
     @markers.push(marker)
+    @warns.push(message: msg, row: row, col: col)
 
   replaceTabsBySpaces: (str) ->
     i = 0
@@ -37,6 +43,18 @@ class EpitechNormChecker
   disable: ->
     @enabled = false
 
+  displayWarnsForLine: (line) ->
+    return unless @warnView
+    @warnView.clearWarns()
+    @warnView.hide()
+    disp = false
+    for w in @warns
+      if w.row == line
+        console.log w
+        @warnView.addWarn(w.message)
+        disp = true
+    @warnView.render() if disp
+
   check: ->
     return unless @enabled
 
@@ -47,6 +65,8 @@ class EpitechNormChecker
 
     for marker in @markers
       marker.destroy()
+    @markers = []
+    @warns = []
 
     @funcNum = 0
     @funcLines = 0
@@ -61,6 +81,7 @@ class EpitechNormChecker
       @checkKeyWordsSpaces line
       @checkEndLineSemicolon line
       @checkComment line
+      @checkBracket line
       @lineNum += 1
 
   checkFuncScope: (line) ->
@@ -143,4 +164,9 @@ class EpitechNormChecker
       @warn("C++ style comment!", @lineNum, tmp.index, line.length - tmp.index)
     tmp = line.match /(\/\*(?:(?!\*\/).)*(?:\*\/)?)/
     if @isInFunc and tmp
-      @warn("Comment in function.", @lineNum, tmp.index, tmp[1].length)
+      @warn("Comment in function.", @lineNum, tmp.index, tmp[0].length)
+
+  checkBracket: (line) ->
+    tmp = line.match /((?:[^\s]+[\s]*[\{\}])|(?:[\{\}][\s]*[^\s]+))/
+    if tmp
+      @warn("Bracket not alone on the line.", @lineNum, tmp.index, tmp[0].length)
