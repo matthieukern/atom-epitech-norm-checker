@@ -44,9 +44,7 @@ module.exports =
       atom.workspace.getActiveTextEditor()
 
     atom.commands.add 'atom-workspace',
-      'epitech-norm-checker:enable': =>
-        getNorm(activeEditor())?.enable()
-      'epitech-norm-checker:disable': =>
-        getNorm(activeEditor())?.disable()
+      'epitech-norm-checker:toggle': =>
+        getNorm(activeEditor())?.toggle()
       'epitech-norm-checker:checkNorm': =>
         getNorm(activeEditor())?.check()

@@ -37,14 +37,25 @@ class EpitechNormChecker
         i += 1
     return ret
 
+  toggle: ->
+    if @enabled then @disable() else @enable()
+
   enable: ->
     @enabled = true
+    @check()
 
   disable: ->
     @enabled = false
+    if @warnView
+      @warnView.clearWarns()
+      @warnView.hide()
+      for marker in @markers
+        marker.destroy()
+      @markers = []
+      @warns = []
 
   displayWarnsForLine: (line) ->
-    return unless @warnView
+    return unless @warnView and @enabled
     @warnView.clearWarns()
     @warnView.hide()
     disp = false
