@@ -94,6 +94,7 @@ class EpitechNormChecker
       @checkBracket line
       @checkSpaceAfterComma line
       @checkFuncArgs line
+      @checkOperators line
       @lineNum += 1
 
   checkFuncScope: (line) ->
@@ -221,8 +222,10 @@ class EpitechNormChecker
     while n < line.length and line.charAt(n) != '\n'
       quote = not quote if line.charAt(n) == '\'' or line.charAt(n) == '"'
       if line.charAt(n) == ',' and not quote
-        if line.charAt(n + 1) != ' ' and line.charAt(n + 1)
+        if line.charAt(n + 1) and line.charAt(n + 1) != ' '
           @warn("Missing space after comma.", @lineNum, n, 1)
+        if line.charAt(n - 1) and line.charAt(n - 1) == ' '
+          @warn("It shouldn't have a space before a comma.", @lineNum, n - 1, 2)
       n += 1
 
   checkFuncArgs: (line) ->
@@ -250,3 +253,11 @@ class EpitechNormChecker
         if @text[i].match /.*\)$/
           return
         i += 1
+
+  checkOperators: (line) ->
+    return if @isInDoc
+
+    tmpLine = line + '\n'
+    tmp = line.match /[\s]*(?:(?:[\+\-\*\/%]*[\w]+[ ]*)|([\s]+))[\+\-\*\/%][ ]*(?:(?:[\+\-\*\/%]*[\w]+)|(?:\n))/
+    if tmp and not line.match /(:?[\s]*(?:(?:[+\-*/%]*[\w]+ )|(?:^[\s]+))(?:[+\-*/%](?: [+\-*/%]*[\w]+)|(?:\n)))|(:?^[\s]+[+\-*/%]*[\w]+[^\w+\-*/%]*$)/
+      @warn("Not right spaces number between operator and operande.", @lineNum, tmp.index, tmp[0].length)
