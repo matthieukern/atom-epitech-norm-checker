@@ -6,7 +6,7 @@ module.exports =
   config:
     autoCheckNorm:
       type: 'boolean'
-      default: false
+      default: true
 
   normCheckerByEditor: null
   warnView: null
