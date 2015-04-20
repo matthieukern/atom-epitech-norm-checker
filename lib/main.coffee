@@ -26,6 +26,8 @@ module.exports =
         [..., fileName] = activeEditor().getPath().split "/"
         if atom.config.get('epitech-norm-checker.autoCheckNorm') and fileName.match /^.*\.[ch]$/
           getNorm(activeEditor())?.check()
+          [line, _] = activeEditor().getCursorBufferPosition().toArray()
+          getNorm(activeEditor())?.displayWarnsForLine line
 
       editor.onDidChangeCursorPosition =>
         return unless activeEditor()
