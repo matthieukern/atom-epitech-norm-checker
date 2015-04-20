@@ -1,6 +1,9 @@
 # epitech-norm package
 ###### By [Matthieu Kern](mailto:matthieukern@gmail.com)
 
+## Disclaimer
+This package is still a work in progress. Some bugs could remains and there are some norm errors that aren't detected yet. If you find a bug, don't hesitate to create an issue on GitHub or to write a pull request !
+
 ## Use
 * To check the norm, you can use the `epitech-norm:checkNorm` command. All errors aren't detected yet.
 * If the corresponding config is set, the plugin will automatically check the norm on C source files.
