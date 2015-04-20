@@ -1,7 +1,7 @@
 {
   "name": "epitech-norm-checker",
   "main": "./lib/main",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A package to show you what parts of your code isn't Epitech's norm compliant.",
   "repository": "https://github.com/matthieukern/atom-epitech-norm-checker",
   "license": "MIT",
