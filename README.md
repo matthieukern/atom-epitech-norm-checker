@@ -1,5 +1,4 @@
 # epitech-norm package
-###### By [Matthieu Kern](mailto:matthieukern@gmail.com)
 
 ## Disclaimer
 This package is still a work in progress. Some bugs could remain and there are some norm errors that aren't detected yet. If you find a bug, don't hesitate to create an issue on GitHub or to write a pull request !
